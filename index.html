@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miguel → Booth & Kellogg | GRE Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface2: #f8f8fa;
+    --surface3: #eeeef4;
+    --border: rgba(0,0,0,0.07);
+    --border2: rgba(0,0,0,0.13);
+    --text: #111118;
+    --text2: #4a4a6a;
+    --text3: #8888aa;
+    --accent: #5b4de0;
+    --accent2: #4035c0;
+    --gold: #b87d0a;
+    --gold2: #c98d10;
+    --green: #1a9e60;
+    --green2: #158048;
+    --red: #c93050;
+    --orange: #c06010;
+    --teal: #0a8a94;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  }
+
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .header-left p {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .badge {
+    background: #f0eefb;
+    border: 1px solid rgba(91,77,224,0.25);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--accent2);
+  }
+
+  .badge.teal { color: var(--teal); background: #e8f7f8; border-color: rgba(10,138,148,0.2); }
+  .badge.green { color: var(--green2); background: #e6f5ee; border-color: rgba(26,158,96,0.25); }
+
+  .nav {
+    display: flex;
+    gap: 2px;
+    padding: 12px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-btn:hover { background: var(--surface3); color: var(--text2); }
+  .nav-btn.active { background: #edeafb; color: var(--accent2); border: 1px solid rgba(91,77,224,0.2); }
+
+  /* MAIN LAYOUT */
+  .main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--text3);
+    margin-bottom: 28px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 16px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* ===== CALENDAR ===== */
+  .calendar-wrapper { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .cal-nav-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .cal-nav-btn:hover { background: var(--surface3); border-color: var(--accent); color: var(--accent2); }
+
+  .cal-month-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day-header {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text3);
+    padding: 8px 0;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    position: relative;
+    border: 1px solid transparent;
+  }
+
+  .cal-day:hover { background: var(--surface3); border-color: var(--border2); }
+  .cal-day.empty { cursor: default; }
+  .cal-day.empty:hover { background: none; border-color: transparent; }
+
+  .cal-day.today { border-color: var(--accent); background: rgba(91,77,224,0.07); }
+
+  .cal-day.owned { background: rgba(26,158,96,0.1); border-color: rgba(26,158,96,0.35); color: var(--green2); }
+  .cal-day.owned::after { content: '●'; font-size: 6px; position: absolute; bottom: 4px; color: var(--green); }
+
+  .cal-day.unavailable { background: rgba(201,48,80,0.06); color: var(--text3); cursor: default; border-color: rgba(201,48,80,0.2); }
+  .cal-day.unavailable:hover { background: rgba(201,48,80,0.06); border-color: rgba(201,48,80,0.2); }
+
+  .cal-day.beast-mode { background: rgba(91,77,224,0.07); border-color: rgba(91,77,224,0.2); color: var(--accent2); }
+
+  .cal-day.past { opacity: 0.45; }
+
+  .cal-day-num { font-size: 13px; line-height: 1; }
+  .cal-day-icon { font-size: 8px; margin-top: 2px; }
+
+  /* STREAK & STATS */
+  .stat-row { display: flex; gap: 12px; margin-bottom: 20px; }
+
+  .stat-mini {
+    flex: 1;
+    background: #f0eefb;
+    border: 1px solid rgba(91,77,224,0.12);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-mini-val { font-size: 26px; font-weight: 800; color: var(--accent2); font-family: 'DM Mono', monospace; }
+  .stat-mini-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-top: 4px; }
+
+  /* LOG ENTRY */
+  .log-entry {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .log-date { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent2); }
+  .log-note { font-size: 13px; color: var(--text2); margin-top: 3px; }
+  .log-mood { font-size: 18px; }
+
+  .mark-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 16px;
+  }
+  .mark-btn:hover { background: rgba(26,158,96,0.1); border-color: var(--green); color: var(--green2); }
+  .mark-btn.already { background: rgba(26,158,96,0.08); border-color: rgba(26,158,96,0.35); color: var(--green2); cursor: default; }
+
+  /* LEGEND */
+  .cal-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* ===== TIMER ===== */
+  .timer-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .timer-mode-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 16px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 80px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 32px;
+    transition: color 0.3s;
+  }
+
+  .timer-display.break-mode { color: var(--green2); }
+  .timer-display.warning { color: var(--orange); }
+  .timer-display.done { color: var(--gold); }
+
+  .timer-ring {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 32px;
+  }
+
+  .timer-ring svg { transform: rotate(-90deg); }
+
+  .timer-ring-bg { stroke: var(--surface3); }
+  .timer-ring-fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+  .timer-ring-fill.break { stroke: var(--green); }
+
+  .timer-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .timer-inner .time { font-family: 'DM Mono', monospace; font-size: 36px; font-weight: 500; color: var(--text); letter-spacing: -1px; }
+  .timer-inner .label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-top: 4px; }
+
+  .timer-presets {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .preset-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .preset-btn:hover { background: rgba(91,77,224,0.1); border-color: var(--accent); color: var(--accent2); }
+  .preset-btn.break-btn:hover { background: rgba(26,158,96,0.1); border-color: var(--green); color: var(--green2); }
+  .preset-btn.active-preset { background: rgba(91,77,224,0.12); border-color: var(--accent); color: var(--accent2); }
+  .preset-btn.break-btn.active-preset { background: rgba(26,158,96,0.12); border-color: var(--green); color: var(--green2); }
+
+  .timer-controls { display: flex; gap: 12px; }
+
+  .timer-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .timer-btn.start { background: rgba(91,77,224,0.1); border-color: var(--accent); color: var(--accent2); }
+  .timer-btn.start:hover { background: rgba(91,77,224,0.18); }
+  .timer-btn.pause { background: rgba(176,125,10,0.1); border-color: var(--gold); color: var(--gold2); }
+  .timer-btn.pause:hover { background: rgba(176,125,10,0.18); }
+  .timer-btn.reset:hover { background: rgba(201,48,80,0.08); border-color: var(--red); color: var(--red); }
+
+  .timer-message {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--text3);
+    font-style: italic;
+    font-family: 'DM Serif Display', serif;
+    text-align: center;
+    min-height: 22px;
+  }
+
+  /* ===== AGENDA ===== */
+  .agenda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+  .agenda-date {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .agenda-weekday {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 24px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .agenda-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .agenda-block:hover { border-color: var(--border2); background: var(--surface3); }
+  .agenda-block.done { opacity: 0.5; }
+  .agenda-block.done .block-title { text-decoration: line-through; }
+
+  .block-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 11px;
+  }
+
+  .agenda-block.done .block-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: #ffffff;
+  }
+
+  .block-info { flex: 1; }
+  .block-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .block-meta { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: 'DM Mono', monospace; }
+
+  .block-duration {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text3);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+
+  .block-duration.focus { color: var(--accent2); border-color: rgba(91,77,224,0.25); background: rgba(91,77,224,0.07); }
+  .block-duration.break { color: var(--green2); border-color: rgba(26,158,96,0.25); background: rgba(26,158,96,0.07); }
+  .block-duration.vocab { color: var(--gold2); border-color: rgba(176,125,10,0.25); background: rgba(176,125,10,0.07); }
+  .block-duration.reading { color: var(--teal); border-color: rgba(10,138,148,0.25); background: rgba(10,138,148,0.07); }
+
+  .agenda-progress {
+    margin-bottom: 20px;
+    background: var(--surface3);
+    border-radius: 4px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .agenda-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .agenda-reset-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .agenda-reset-btn:hover { color: var(--red); border-color: var(--red); }
+
+  .unavail-notice {
+    background: rgba(201,48,80,0.05);
+    border: 1px solid rgba(201,48,80,0.2);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .unavail-notice .icon { font-size: 28px; margin-bottom: 10px; }
+  .unavail-notice h3 { font-family: 'DM Serif Display', serif; font-size: 20px; margin-bottom: 8px; color: var(--text); }
+  .unavail-notice p { font-size: 13px; color: var(--text3); line-height: 1.6; }
+
+  /* ===== ROADMAP ===== */
+  .roadmap-bar-wrap { margin-bottom: 28px; }
+
+  .roadmap-bar-outer {
+    height: 20px;
+    background: var(--surface3);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .roadmap-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold2));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    position: relative;
+  }
+
+  .roadmap-bar-inner::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(91,77,224,0.4);
+  }
+
+  .roadmap-phases { display: flex; flex-direction: column; gap: 12px; }
+
+  .phase-row {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .phase-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .phase-indicator.past { background: var(--green); }
+  .phase-indicator.current { background: var(--gold2); box-shadow: 0 0 6px rgba(201,141,16,0.5); }
+  .phase-indicator.future { background: var(--surface3); border: 2px solid var(--border2); }
+  .phase-indicator.unavail { background: var(--red); opacity: 0.6; }
+  .phase-indicator.beast { background: var(--accent); box-shadow: 0 0 6px rgba(91,77,224,0.4); }
+
+  .phase-info { flex: 1; }
+  .phase-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .phase-dates { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 3px; }
+  .phase-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .phase-tag.active { background: rgba(176,125,10,0.1); color: var(--gold2); border: 1px solid rgba(176,125,10,0.25); }
+  .phase-tag.rest { background: rgba(201,48,80,0.07); color: var(--red); border: 1px solid rgba(201,48,80,0.2); }
+  .phase-tag.beast { background: rgba(91,77,224,0.1); color: var(--accent2); border: 1px solid rgba(91,77,224,0.25); }
+  .phase-tag.done { background: rgba(26,158,96,0.08); color: var(--green2); border: 1px solid rgba(26,158,96,0.2); }
+
+  /* ===== MOTIVATION ===== */
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .tip-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+  .tip-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .tip-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+  .quote-card {
+    background: #f2f0fc;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .quote-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .quote-author { font-size: 12px; color: var(--text3); letter-spacing: 1px; font-family: 'DM Mono', monospace; }
+
+  /* SCORE TRACKER */
+  .score-inputs { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }
+
+  .score-field { display: flex; flex-direction: column; gap: 6px; }
+  .score-field label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); }
+
+  input[type="number"], input[type="text"], input[type="date"], textarea, select {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input[type="number"]:focus, input[type="text"]:focus, input[type="date"]:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .save-btn {
+    background: rgba(91,77,224,0.1);
+    border: 1px solid rgba(91,77,224,0.3);
+    color: var(--accent2);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 24px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .save-btn:hover { background: rgba(91,77,224,0.18); }
+
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+  .score-row:last-child { border-bottom: none; }
+  .score-date { color: var(--text3); }
+  .score-q { color: var(--accent2); }
+  .score-v { color: var(--green2); }
+  .score-total { color: var(--gold2); font-weight: 700; }
+
+  /* MOOD LOG */
+  .mood-row { display: flex; gap: 10px; margin-bottom: 16px; }
+  .mood-btn {
+    flex: 1;
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 20px;
+    transition: all 0.2s;
+  }
+  .mood-btn:hover { transform: scale(1.05); }
+  .mood-btn.selected { border-color: var(--accent); background: rgba(91,77,224,0.08); }
+
+  /* NOTIFICATION */
+  .notif {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--green);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--green2);
+    font-weight: 600;
+    z-index: 1000;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    max-width: 300px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .notif.show { transform: translateY(0); opacity: 1; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .main { padding: 20px 16px; }
+    .header { padding: 16px; }
+    .nav { padding: 12px 16px; overflow-x: auto; }
+    .grid-2, .grid-3, .calendar-wrapper, .agenda-grid, .tips-grid { grid-template-columns: 1fr; }
+    .timer-display { font-size: 56px; }
+    .header-badges { display: none; }
+  }
+
+  /* ===== APPLICATIONS ===== */
+  .app-tab-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+  .app-tab-btn:hover { background: var(--surface2); }
+  .app-tab-btn.active { background: #edeafb; border-color: rgba(91,77,224,0.3); color: var(--accent2); }
+
+  .app-school-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+  }
+
+  .app-school-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .app-school-sub {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .app-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+
+  .app-sections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .app-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .app-section-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .app-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .app-item {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .app-item:last-child { border-bottom: none; }
+  .app-item:hover { background: var(--surface2); }
+
+  .app-item-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+
+  .app-item.done .app-item-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  .app-item-text { flex: 1; }
+  .app-item-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .app-item.done .app-item-label { text-decoration: line-through; color: var(--text3); }
+  .app-item-hint { font-size: 11px; color: var(--text3); margin-top: 2px; line-height: 1.4; }
+
+  .app-tip-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .app-tip-badge.early { background: rgba(26,158,96,0.1); color: var(--green2); }
+  .app-tip-badge.mid { background: rgba(176,125,10,0.1); color: var(--gold2); }
+  .app-tip-badge.late { background: rgba(201,48,80,0.08); color: var(--red); }
+  .app-tip-badge.key { background: rgba(91,77,224,0.1); color: var(--accent2); }
+
+  @media (max-width: 900px) {
+    .app-sections-grid { grid-template-columns: 1fr; }
+    .app-school-header { flex-direction: column; gap: 16px; }
+  }
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <h1>Miguel → Booth & Kellogg</h1>
+    <p id="header-date">GRE Command Center · Loading...</p>
+  </div>
+  <div class="header-badges">
+    <div class="badge">Chicago Booth</div>
+    <div class="badge teal">Kellogg</div>
+    <div class="badge green" id="streak-badge">0 Day Streak</div>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPanel('calendar')">📅 Calendar</button>
+  <button class="nav-btn" onclick="showPanel('timer')">⏱ Timer</button>
+  <button class="nav-btn" onclick="showPanel('agenda')">✅ Today's Agenda</button>
+  <button class="nav-btn" onclick="showPanel('roadmap')">🗺 Roadmap</button>
+  <button class="nav-btn" onclick="showPanel('scores')">📊 Scores</button>
+  <button class="nav-btn" onclick="showPanel('motivation')">🔥 Motivation</button>
+  <button class="nav-btn" onclick="showPanel('applications')">🎓 Applications</button>
+</nav>
+
+<main class="main">
+
+  <!-- ===== CALENDAR PANEL ===== -->
+  <div class="panel active" id="panel-calendar">
+    <h2 class="section-title">Ownership Calendar</h2>
+    <p class="section-sub">Click any available day to mark it as owned. Every checkmark counts.</p>
+
+    <div class="calendar-wrapper">
+      <div class="card">
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">←</button>
+          <span class="cal-month-name" id="cal-month-name">April 2026</span>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">→</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(26,158,96,0.35)"></div> Owned</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(201,48,80,0.2)"></div> Unavailable</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(91,77,224,0.2)"></div> Beast Mode</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(91,77,224,0.35)"></div> Today</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="stat-row">
+          <div class="stat-mini">
+            <div class="stat-mini-val" id="stat-owned">0</div>
+            <div class="stat-mini-label">Days Owned</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-val" id="stat-streak" style="color:var(--gold2)">0</div>
+            <div class="stat-mini-label">Current Streak</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-val" id="stat-remaining" style="color:var(--text3)">--</div>
+            <div class="stat-mini-label">Days Left</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Today's Ownership</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">
+            Did you show up today? Mark your day, track your mood, leave a note.
+          </p>
+          <div class="mood-row">
+            <button class="mood-btn" data-mood="🔥" onclick="selectMood(this)">🔥</button>
+            <button class="mood-btn" data-mood="💪" onclick="selectMood(this)">💪</button>
+            <button class="mood-btn" data-mood="😐" onclick="selectMood(this)">😐</button>
+            <button class="mood-btn" data-mood="😤" onclick="selectMood(this)">😤</button>
+            <button class="mood-btn" data-mood="🧩" onclick="selectMood(this)">🧩</button>
+          </div>
+          <textarea id="today-note" placeholder="What did you study? How was it? (optional)" style="height:80px;resize:none;margin-bottom:8px;font-size:13px"></textarea>
+          <button class="mark-btn" id="mark-today-btn" onclick="markToday()">Mark Today as Owned ✓</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Recent Entries</div>
+          <div id="log-list" style="max-height:220px;overflow-y:auto">
+            <p style="font-size:13px;color:var(--text3);text-align:center;padding:20px">No entries yet. Start today!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TIMER PANEL ===== -->
+  <div class="panel" id="panel-timer">
+    <h2 class="section-title">Focus Timer</h2>
+    <p class="section-sub">Lock in. Protect your time. Every session counts.</p>
+
+    <div class="card" style="max-width:600px;margin:0 auto">
+      <div class="timer-center">
+        <p class="timer-mode-label" id="timer-mode-label">SELECT A MODE</p>
+
+        <div class="timer-ring">
+          <svg width="220" height="220" viewBox="0 0 220 220">
+            <circle class="timer-ring-bg" cx="110" cy="110" r="96" fill="none" stroke-width="8"/>
+            <circle class="timer-ring-fill" id="timer-ring-fill" cx="110" cy="110" r="96" fill="none" stroke-width="8"
+              stroke-dasharray="603" stroke-dashoffset="603"/>
+          </svg>
+          <div class="timer-inner">
+            <div class="time" id="timer-ring-time">--:--</div>
+            <div class="label" id="timer-ring-label">ready</div>
+          </div>
+        </div>
+
+        <div class="timer-presets">
+          <button class="preset-btn" onclick="setTimer(90,'DEEP WORK',false)">90 min Lock-in</button>
+          <button class="preset-btn" onclick="setTimer(30,'STUDY BLOCK',false)">30 min Block</button>
+          <button class="preset-btn break-btn" onclick="setTimer(20,'BREAK TIME',true)">20 min Break</button>
+        </div>
+
+        <div class="timer-controls">
+          <button class="timer-btn start" id="timer-start-btn" onclick="startTimer()">Start</button>
+          <button class="timer-btn pause" id="timer-pause-btn" onclick="pauseTimer()" style="display:none">Pause</button>
+          <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
+        </div>
+
+        <p class="timer-message" id="timer-msg">Choose a session type above to begin.</p>
+      </div>
+    </div>
+
+    <div style="max-width:600px;margin:20px auto">
+      <div class="card">
+        <div class="card-title">Today's Sessions</div>
+        <div id="sessions-log" style="min-height:60px">
+          <p style="font-size:13px;color:var(--text3);text-align:center;padding:16px">No sessions yet today.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== AGENDA PANEL ===== -->
+  <div class="panel" id="panel-agenda">
+    <div class="agenda-grid">
+      <div>
+        <div class="agenda-date" id="agenda-date-display">Today</div>
+        <div class="agenda-weekday" id="agenda-weekday-display">LOADING...</div>
+        <div class="agenda-progress" id="agenda-progress-wrap">
+          <div class="agenda-progress-bar" id="agenda-progress-bar" style="width:0%"></div>
+        </div>
+        <div id="agenda-blocks"></div>
+        <button class="agenda-reset-btn" onclick="resetAgenda()">Reset today's checklist</button>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Today's Mode</div>
+          <div id="today-mode-info" style="font-size:14px;line-height:1.7;color:var(--text2)">Loading...</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Session Schedule</div>
+          <div style="font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;line-height:2">
+            <div style="color:var(--accent2)">🔒 90 min -- Deep Work Block 1</div>
+            <div style="color:var(--green2)">☕ 20 min -- Break</div>
+            <div style="color:var(--accent2)">🔒 90 min -- Deep Work Block 2</div>
+            <div style="color:var(--green2)">☕ 20 min -- Break</div>
+            <div style="color:var(--gold2)">📖 60 min -- Vocab App</div>
+            <div style="color:var(--teal)">📚 4× Readings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROADMAP PANEL ===== -->
+  <div class="panel" id="panel-roadmap">
+    <h2 class="section-title">Road to Booth & Kellogg</h2>
+    <p class="section-sub">March 30 → September 2, 2026 · Your complete GRE timeline</p>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">Overall Progress</div>
+      <div class="roadmap-bar-wrap">
+        <div class="roadmap-bar-outer">
+          <div class="roadmap-bar-inner" id="roadmap-bar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">
+          <span>Mar 30</span>
+          <span id="roadmap-pct" style="color:var(--gold2)">0%</span>
+          <span>Sep 2</span>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:16px">
+        <div class="stat-mini">
+          <div class="stat-mini-val" id="rm-days-done">0</div>
+          <div class="stat-mini-label">Days Elapsed</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-val" id="rm-days-left" style="color:var(--gold2)">0</div>
+          <div class="stat-mini-label">Days Remaining</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-val" id="rm-study-days" style="color:var(--green2)">0</div>
+          <div class="stat-mini-label">Available Study Days Left</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Phase Breakdown</div>
+      <div class="roadmap-phases" id="roadmap-phases"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCORES PANEL ===== -->
+  <div class="panel" id="panel-scores">
+    <h2 class="section-title">Score Tracker</h2>
+    <p class="section-sub">Log practice scores, track your progress toward your target.</p>
+
+    <div class="grid-2" style="align-items:start">
+      <div class="card">
+        <div class="card-title">Log a Practice Score</div>
+        <div class="score-inputs">
+          <div class="score-field" style="flex:1">
+            <label>Date</label>
+            <input type="date" id="score-date">
+          </div>
+          <div class="score-field" style="width:90px">
+            <label>Quant</label>
+            <input type="number" id="score-q" placeholder="130-170" min="130" max="170">
+          </div>
+          <div class="score-field" style="width:90px">
+            <label>Verbal</label>
+            <input type="number" id="score-v" placeholder="130-170" min="130" max="170">
+          </div>
+        </div>
+        <div class="score-field" style="margin-bottom:14px">
+          <label>Source</label>
+          <input type="text" id="score-source" placeholder="ETS Official, Manhattan Prep, etc.">
+        </div>
+        <button class="save-btn" style="width:100%" onclick="saveScore()">Log Score</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Target Scores</div>
+        <div style="margin-bottom:16px">
+          <div class="score-row">
+            <span style="color:var(--text2)">Booth (Avg)</span>
+            <span class="score-q">Q: 163</span>
+            <span class="score-v">V: 162</span>
+            <span class="score-total">325</span>
+          </div>
+          <div class="score-row">
+            <span style="color:var(--text2)">Kellogg (Avg)</span>
+            <span class="score-q">Q: 162</span>
+            <span class="score-v">V: 160</span>
+            <span class="score-total">322</span>
+          </div>
+          <div class="score-row" style="border-top:1px solid var(--accent);margin-top:8px;padding-top:12px">
+            <span style="color:var(--text2)">Your Target</span>
+            <span class="score-q">Q: 165+</span>
+            <span class="score-v">V: 160+</span>
+            <span class="score-total" style="color:var(--accent2)">325+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">Score History</div>
+      <div id="score-history">
+        <p style="font-size:13px;color:var(--text3);text-align:center;padding:20px">No scores logged yet. Start tracking!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MOTIVATION PANEL ===== -->
+  <div class="panel" id="panel-motivation">
+    <h2 class="section-title">Stay in the Fight</h2>
+    <p class="section-sub">Strategies to make studying stick -- especially on hard days.</p>
+
+    <div class="quote-card" id="daily-quote">
+      <div class="quote-text" id="quote-text">The secret of getting ahead is getting started.</div>
+      <div class="quote-author" id="quote-author">-- MARK TWAIN</div>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">🧱</span>
+        <div class="tip-title">Stack, Don't Skip</div>
+        <div class="tip-body">Missing one day is an accident. Missing two is the start of a habit. On low-energy days, do just the 20-min vocab session. Keep the chain alive.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📍</span>
+        <div class="tip-title">Anchor to a Place</div>
+        <div class="tip-body">Pick one spot that is only for GRE. Not your bed, not the couch. That physical anchor trains your brain to switch into study mode the moment you sit down.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">⏱</span>
+        <div class="tip-title">The 5-Minute Rule</div>
+        <div class="tip-body">Tell yourself: "I'll just do 5 minutes." You almost never stop at 5. The hardest part is always starting -- once the engine is running, momentum takes over.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🎯</span>
+        <div class="tip-title">Score on the Scoreboard</div>
+        <div class="tip-body">Log your practice scores -- even bad ones. Seeing measurable progress (from 145 → 152 → 160) is the most powerful motivator there is. Numbers don't lie.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🔊</span>
+        <div class="tip-title">Make It Loud</div>
+        <div class="tip-body">Tell one person about your goal every week. Accountability to others creates pressure that self-discipline alone can't match. Say it out loud: "I'm going to Booth."</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🖼</span>
+        <div class="tip-title">Visualize the Letter</div>
+        <div class="tip-body">Close your eyes for 60 seconds. You open your email. It says "Congratulations." Feel it completely. Then open your books. That feeling is what you're studying for.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🌙</span>
+        <div class="tip-title">Protect Your Sleep</div>
+        <div class="tip-body">Sleep is when your brain consolidates what it learned. Sacrificing sleep for more study time is a bad trade. 7-8 hours makes every hour of studying 40% more effective.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📅</span>
+        <div class="tip-title">Beast Mode is Coming</div>
+        <div class="tip-body">From June 15 onward, you shift into full gear. The "light" period until then is about building the habit -- so that when beast mode starts, it's automatic, not a shock.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;text-align:center;padding:32px;background:linear-gradient(135deg,#f2f0fc,#eef6f1)">
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);margin-bottom:8px;line-height:1.6">
+        "You are not studying for the GRE.<br>You are building the version of yourself<br>that belongs at Booth and Kellogg."
+      </div>
+      <div style="font-size:11px;letter-spacing:2px;color:var(--text3);margin-top:16px">REMEMBER THIS EVERY SINGLE DAY</div>
+    </div>
+  </div>
+
+
+  <!-- ===== APPLICATIONS PANEL ===== -->
+  <div class="panel" id="panel-applications">
+    <h2 class="section-title">Application Tracker</h2>
+    <p class="section-sub">Full-Time MBA checklists for Booth and Kellogg · Check off each item as you complete it</p>
+
+    <!-- SCHOOL TABS -->
+    <div style="display:flex;gap:8px;margin-bottom:28px">
+      <button class="app-tab-btn active" id="tab-booth" onclick="switchAppTab('booth')">
+        Chicago Booth
+      </button>
+      <button class="app-tab-btn" id="tab-kellogg" onclick="switchAppTab('kellogg')">
+        Kellogg Northwestern
+      </button>
+    </div>
+
+    <!-- BOOTH PANEL -->
+    <div id="app-booth">
+      <div class="app-school-header">
+        <div>
+          <div class="app-school-name">Chicago Booth School of Business</div>
+          <div class="app-school-sub">Full-Time MBA · Hyde Park, Chicago · Class of 2029 Target</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:4px">APPLICATION ROUNDS</div>
+          <div style="font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;line-height:1.8">
+            R1 · Sep 16, 2026<br>R2 · Jan 6, 2027<br>R3 · Apr 2, 2027
+          </div>
+        </div>
+      </div>
+
+      <div class="app-progress-row">
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+            <span style="color:var(--text3)">Overall Completion</span>
+            <span style="font-family:'DM Mono',monospace;color:var(--accent2)" id="booth-pct">0%</span>
+          </div>
+          <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden">
+            <div id="booth-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:3px;width:0%;transition:width 0.4s"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-sections-grid" id="booth-checklist"></div>
+    </div>
+
+    <!-- KELLOGG PANEL -->
+    <div id="app-kellogg" style="display:none">
+      <div class="app-school-header">
+        <div>
+          <div class="app-school-name">Kellogg School of Management</div>
+          <div class="app-school-sub">Full-Time Two-Year MBA · Evanston, IL · Class of 2029 Target</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:4px">APPLICATION ROUNDS</div>
+          <div style="font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;line-height:1.8">
+            R1 · Sep 10, 2026<br>R2 · Jan 7, 2027<br>R3 · Apr 1, 2027
+          </div>
+        </div>
+      </div>
+
+      <div class="app-progress-row">
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+            <span style="color:var(--text3)">Overall Completion</span>
+            <span style="font-family:'DM Mono',monospace;color:var(--teal)" id="kellogg-pct">0%</span>
+          </div>
+          <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden">
+            <div id="kellogg-bar" style="height:100%;background:linear-gradient(90deg,var(--teal),var(--green));border-radius:3px;width:0%;transition:width 0.4s"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-sections-grid" id="kellogg-checklist"></div>
+    </div>
+  </div>
+
+</main>
+
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ===== DATA =====
+const STORE_KEY = 'miguel-gre-v3';
+
+function loadData() {
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY)) || {};
+  } catch(e) { return {}; }
+}
+
+function saveData(data) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
+
+let appData = loadData();
+if (!appData.owned) appData.owned = {};
+if (!appData.scores) appData.scores = [];
+if (!appData.sessions) appData.sessions = {};
+if (!appData.agendaChecks) appData.agendaChecks = {};
+if (!appData.notes) appData.notes = {};
+if (!appData.moods) appData.moods = {};
+
+// ===== DATES =====
+const START = new Date(2026, 2, 30);
+const END = new Date(2026, 8, 2);
+const BEAST_START = new Date(2026, 5, 15);
+
+const UNAVAILABLE_RANGES = [
+  [new Date(2026,3,16), new Date(2026,3,19)],
+  [new Date(2026,3,24), new Date(2026,3,26)],
+  [new Date(2026,3,28), new Date(2026,4,2)],
+  [new Date(2026,4,13), new Date(2026,4,15)],
+  [new Date(2026,4,21), new Date(2026,5,14)],
+];
+
+function isUnavailable(d) {
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return UNAVAILABLE_RANGES.some(([s,e]) => {
+    const st = new Date(s.getFullYear(), s.getMonth(), s.getDate()).getTime();
+    const et = new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime();
+    return t >= st && t <= et;
+  });
+}
+
+function isBeastMode(d) {
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const bt = new Date(BEAST_START.getFullYear(), BEAST_START.getMonth(), BEAST_START.getDate()).getTime();
+  const et = new Date(END.getFullYear(), END.getMonth(), END.getDate()).getTime();
+  return t >= bt && t <= et;
+}
+
+function isInProgram(d) {
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const st = new Date(START.getFullYear(), START.getMonth(), START.getDate()).getTime();
+  const et = new Date(END.getFullYear(), END.getMonth(), END.getDate()).getTime();
+  return t >= st && t <= et;
+}
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function today() { return new Date(); }
+
+// ===== NAV =====
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+  if(id==='agenda') renderAgenda();
+  if(id==='roadmap') renderRoadmap();
+  if(id==='applications') renderApplications();
+}
+
+// ===== NOTIFICATIONS =====
+function showNotif(msg, color) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.style.borderColor = color || 'var(--green)';
+  n.style.color = color || 'var(--green2)';
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3000);
+}
+
+// ===== CALENDAR =====
+let calViewYear, calViewMonth;
+
+function initCalView() {
+  const t = today();
+  calViewYear = t.getFullYear();
+  calViewMonth = t.getMonth();
+}
+
+function changeMonth(dir) {
+  calViewMonth += dir;
+  if(calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+  if(calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const t = today();
+  const todayKey = dateKey(t);
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-name').textContent = `${monthNames[calViewMonth]} ${calViewYear}`;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const dayHeaders = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  dayHeaders.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-header';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  const firstDay = new Date(calViewYear, calViewMonth, 1).getDay();
+  const daysInMonth = new Date(calViewYear, calViewMonth+1, 0).getDate();
+
+  for(let i=0; i<firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  for(let day=1; day<=daysInMonth; day++) {
+    const d = new Date(calViewYear, calViewMonth, day);
+    const key = dateKey(d);
+    const isPast = d < new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    const isToday = key === todayKey;
+    const isOwned = !!appData.owned[key];
+    const unavail = isUnavailable(d);
+    const beast = isBeastMode(d);
+    const inProgram = isInProgram(d);
+
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    if(isPast && !isToday) el.classList.add('past');
+    if(isToday) el.classList.add('today');
+    if(isOwned) el.classList.add('owned');
+    if(unavail && inProgram) el.classList.add('unavailable');
+    else if(beast && inProgram && !isOwned) el.classList.add('beast-mode');
+
+    el.innerHTML = `<span class="cal-day-num">${day}</span>${isOwned ? '<span class="cal-day-icon">✓</span>' : ''}`;
+
+    if(!unavail && inProgram && !isPast || isToday) {
+      el.onclick = () => toggleOwned(key, d);
+    } else if(unavail) {
+      el.title = 'Rest day -- readings & vocab only';
+    }
+
+    grid.appendChild(el);
+  }
+
+  updateCalStats();
+}
+
+function toggleOwned(key, d) {
+  if(appData.owned[key]) {
+    delete appData.owned[key];
+    showNotif('Day unmarked.', 'var(--red)');
+  } else {
+    appData.owned[key] = true;
+    showNotif('Day owned! Keep going! 🔥', 'var(--green)');
+  }
+  saveData(appData);
+  renderCalendar();
+  updateStreakBadge();
+}
+
+function markToday() {
+  const t = today();
+  const key = dateKey(t);
+  const note = document.getElementById('today-note').value.trim();
+  const mood = document.querySelector('.mood-btn.selected')?.dataset?.mood || '';
+
+  appData.owned[key] = true;
+  if(note) appData.notes[key] = note;
+  if(mood) appData.moods[key] = mood;
+  saveData(appData);
+
+  const btn = document.getElementById('mark-today-btn');
+  btn.textContent = 'Today Marked! ✓';
+  btn.classList.add('already');
+
+  renderCalendar();
+  renderLogList();
+  updateStreakBadge();
+  showNotif('Today owned! You showed up. 🏆', 'var(--gold)');
+}
+
+function selectMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function computeStreak() {
+  let streak = 0;
+  const t = today();
+  let d = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  while(true) {
+    const key = dateKey(d);
+    if(appData.owned[key] || isUnavailable(d)) {
+      if(isInProgram(d)) streak++;
+    } else {
+      break;
+    }
+    d.setDate(d.getDate()-1);
+    if(d < START) break;
+  }
+  return streak;
+}
+
+function updateCalStats() {
+  const owned = Object.keys(appData.owned).length;
+  document.getElementById('stat-owned').textContent = owned;
+
+  const streak = computeStreak();
+  document.getElementById('stat-streak').textContent = streak;
+
+  const t = today();
+  const endT = END.getTime();
+  const tT = new Date(t.getFullYear(), t.getMonth(), t.getDate()).getTime();
+  const remaining = Math.max(0, Math.round((endT - tT) / 86400000));
+  document.getElementById('stat-remaining').textContent = remaining;
+}
+
+function updateStreakBadge() {
+  const s = computeStreak();
+  document.getElementById('streak-badge').textContent = `${s} Day Streak`;
+}
+
+function renderLogList() {
+  const list = document.getElementById('log-list');
+  const entries = Object.keys(appData.owned).sort().reverse().slice(0,15);
+  if(!entries.length) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px">No entries yet. Start today!</p>';
+    return;
+  }
+  list.innerHTML = entries.map(key => {
+    const mood = appData.moods[key] || '💪';
+    const note = appData.notes[key] || 'Showed up.';
+    const [y,m,d] = key.split('-');
+    const dateStr = `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${parseInt(d)}`;
+    return `<div class="log-entry">
+      <div>
+        <div class="log-date">${dateStr}, ${y}</div>
+        <div class="log-note">${note}</div>
+      </div>
+      <div class="log-mood">${mood}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===== TIMER =====
+let timerInterval = null;
+let timerSeconds = 0;
+let timerTotal = 0;
+let timerRunning = false;
+let timerIsBreak = false;
+let timerLabel = '';
+let todaySessions = [];
+
+const TIMER_MSGS = {
+  start: ["Lock the door. Close the tabs. It's time.", "You've got 90 minutes. Make them count.", "Deep work mode: activated.", "This session could change everything.", "Focus is a superpower. Activate it now."],
+  break: ["Step away. Breathe. You earned it.", "Hydrate. Walk around. Come back fresh.", "Your brain is consolidating what you just learned.", "Rest is part of the process."],
+  done: ["Session complete! Log it and rest up.", "Done. That's another brick in the wall.", "That's what Booth candidates do.", "You just did what most people won\'t."]
+};
+
+function getRandMsg(type) {
+  const arr = TIMER_MSGS[type];
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function setTimer(mins, label, isBreak) {
+  resetTimer();
+  timerSeconds = mins * 60;
+  timerTotal = timerSeconds;
+  timerLabel = label;
+  timerIsBreak = isBreak;
+
+  document.getElementById('timer-mode-label').textContent = label;
+  document.getElementById('timer-ring-label').textContent = label.toLowerCase();
+
+  const fill = document.getElementById('timer-ring-fill');
+  fill.className = 'timer-ring-fill' + (isBreak ? ' break' : '');
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active-preset'));
+
+  updateTimerDisplay();
+  document.getElementById('timer-msg').textContent = isBreak
+    ? 'Ready for a break? You earned it.'
+    : 'Ready to lock in? Hit Start when you are.';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('timer-ring-time').textContent = str;
+
+  const pct = timerTotal > 0 ? (timerTotal - timerSeconds) / timerTotal : 0;
+  const circumference = 2 * Math.PI * 96;
+  const offset = circumference * (1 - pct);
+  document.getElementById('timer-ring-fill').style.strokeDashoffset = offset;
+
+  const fill = document.getElementById('timer-ring-fill');
+  if(timerSeconds <= 60 && timerSeconds > 0) fill.style.stroke = 'var(--orange)';
+  else if(timerIsBreak) fill.style.stroke = 'var(--green)';
+  else fill.style.stroke = 'var(--accent)';
+}
+
+function startTimer() {
+  if(timerTotal === 0) { showNotif('Choose a timer mode first.', 'var(--orange)'); return; }
+  timerRunning = true;
+  document.getElementById('timer-start-btn').style.display = 'none';
+  document.getElementById('timer-pause-btn').style.display = 'block';
+  document.getElementById('timer-msg').textContent = getRandMsg('start');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if(timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      onTimerDone();
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  if(timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-pause-btn').textContent = 'Resume';
+    document.getElementById('timer-msg').textContent = 'Paused. Come back when you\'re ready.';
+  } else {
+    startTimer();
+    document.getElementById('timer-pause-btn').textContent = 'Pause';
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSeconds = 0;
+  timerTotal = 0;
+  document.getElementById('timer-ring-fill').style.strokeDashoffset = 2 * Math.PI * 96;
+  document.getElementById('timer-ring-time').textContent = '--:--';
+  document.getElementById('timer-ring-label').textContent = 'ready';
+  document.getElementById('timer-mode-label').textContent = 'SELECT A MODE';
+  document.getElementById('timer-start-btn').style.display = 'block';
+  document.getElementById('timer-pause-btn').style.display = 'none';
+  document.getElementById('timer-pause-btn').textContent = 'Pause';
+  document.getElementById('timer-msg').textContent = 'Choose a session type above to begin.';
+}
+
+function playDoneSound(isBreak) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.4, ctx.currentTime);
+    master.connect(ctx.destination);
+
+    function tone(freq, startTime, duration, type) {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+      env.gain.setValueAtTime(0, ctx.currentTime + startTime);
+      env.gain.linearRampToValueAtTime(1, ctx.currentTime + startTime + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+      osc.connect(env);
+      env.connect(master);
+      osc.start(ctx.currentTime + startTime);
+      osc.stop(ctx.currentTime + startTime + duration);
+    }
+
+    if (isBreak) {
+      // Break over: two gentle ascending tones (soft, inviting)
+      tone(440, 0,    0.5, 'sine');
+      tone(550, 0.25, 0.5, 'sine');
+      tone(660, 0.5,  0.7, 'sine');
+    } else {
+      // Focus session done: triumphant three-note chord sequence
+      tone(523, 0,    0.4, 'triangle'); // C5
+      tone(659, 0.15, 0.4, 'triangle'); // E5
+      tone(784, 0.3,  0.6, 'triangle'); // G5
+      tone(1047,0.5,  0.8, 'sine');     // C6 - high finish
+    }
+
+    setTimeout(() => ctx.close(), 2500);
+  } catch(e) {}
+}
+
+function onTimerDone() {
+  document.getElementById('timer-start-btn').style.display = 'block';
+  document.getElementById('timer-pause-btn').style.display = 'none';
+
+  const doneMsg = timerIsBreak ? 'Break over! Back to work.' : getRandMsg('done');
+  document.getElementById('timer-msg').textContent = doneMsg;
+
+  const totalMins = Math.round(timerTotal / 60);
+  todaySessions.push({ label: timerLabel, mins: totalMins, isBreak: timerIsBreak });
+  renderSessionLog();
+
+  showNotif(timerIsBreak ? 'Break done! Time to focus again.' : `${totalMins} min session complete! 🎯`, timerIsBreak ? 'var(--green)' : 'var(--gold)');
+
+  playDoneSound(timerIsBreak);
+}
+
+function renderSessionLog() {
+  const el = document.getElementById('sessions-log');
+  if(!todaySessions.length) {
+    el.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px">No sessions yet today.</p>';
+    return;
+  }
+  el.innerHTML = todaySessions.map((s,i) => `
+    <div class="score-row">
+      <span style="color:var(--text3)">#${i+1}</span>
+      <span style="color:var(--text)">${s.label}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:13px;color:${s.isBreak ? 'var(--green2)' : 'var(--accent2)'}">${s.mins} min</span>
+    </div>
+  `).join('');
+}
+
+// ===== AGENDA =====
+const AGENDA_ITEMS = [
+  { id:'a1', label:'First 90min Lock-in', meta:'Deep Work Block 1 · No distractions', dur:'90 min', type:'focus' },
+  { id:'a2', label:'Break', meta:'Step away, hydrate, breathe', dur:'20 min', type:'break' },
+  { id:'a3', label:'Second 90min Lock-in', meta:'Deep Work Block 2 · Stay in the zone', dur:'90 min', type:'focus' },
+  { id:'a4', label:'Break', meta:'Rest your brain, get some air', dur:'20 min', type:'break' },
+  { id:'a5', label:'Vocab App Session', meta:'Magoosh / GRE vocab · Active recall', dur:'60 min', type:'vocab' },
+  { id:'a6', label:'Reading 1', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'a7', label:'Reading 2', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'a8', label:'Reading 3', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'a9', label:'Reading 4', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+];
+
+const UNAVAIL_AGENDA = [
+  { id:'u1', label:'Vocab App Session', meta:'Keep the vocab streak alive!', dur:'60 min', type:'vocab' },
+  { id:'u2', label:'Reading 1', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'u3', label:'Reading 2', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'u4', label:'Reading 3', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+  { id:'u5', label:'Reading 4', meta:'RC passage + questions', dur:'15 min', type:'reading' },
+];
+
+function renderAgenda() {
+  const t = today();
+  const key = dateKey(t);
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('agenda-date-display').textContent = `${months[t.getMonth()]} ${t.getDate()}, ${t.getFullYear()}`;
+  document.getElementById('agenda-weekday-display').textContent = days[t.getDay()].toUpperCase() + ' · GRE PREP DAY';
+
+  const unavail = isUnavailable(t);
+  const inBeast = isBeastMode(t);
+  const inProgram = isInProgram(t);
+
+  let modeInfo = '';
+  if(!inProgram) {
+    modeInfo = '<span style="color:var(--text3)">Program hasn\'t started yet or has ended.</span>';
+  } else if(unavail) {
+    modeInfo = '<span style="color:var(--red)">⚠ Rest Day</span><br>Today is an unavailable day. Focus on readings and vocab only. Keep the habit alive.';
+  } else if(inBeast) {
+    modeInfo = '<span style="color:var(--gold)">🔥 BEAST MODE</span><br>June 15 → Sep 2. This is it. Full sessions, every day. No excuses. Booth and Kellogg are watching.';
+  } else {
+    modeInfo = '<span style="color:var(--accent2)">📚 Build Phase</span><br>Today is a full study day. Complete all blocks. Build the habit now so beast mode feels effortless.';
+  }
+  document.getElementById('today-mode-info').innerHTML = modeInfo;
+
+  const items = unavail ? UNAVAIL_AGENDA : AGENDA_ITEMS;
+  if(!appData.agendaChecks[key]) appData.agendaChecks[key] = {};
+  const checks = appData.agendaChecks[key];
+
+  const done = items.filter(i => checks[i.id]).length;
+  const pct = Math.round((done / items.length) * 100);
+  document.getElementById('agenda-progress-bar').style.width = pct + '%';
+
+  const container = document.getElementById('agenda-blocks');
+
+  if(unavail) {
+    container.innerHTML = `<div class="unavail-notice" style="margin-bottom:16px">
+      <div class="icon">🏖</div>
+      <h3>Rest Day</h3>
+      <p>You're on a break, but don\'t let the habit die. Just vocab + readings today -- that\'s all you need.</p>
+    </div>`;
+  } else {
+    container.innerHTML = '';
+  }
+
+  items.forEach(item => {
+    const isDone = !!checks[item.id];
+    const block = document.createElement('div');
+    block.className = 'agenda-block' + (isDone ? ' done' : '');
+    block.innerHTML = `
+      <div class="block-check">${isDone ? '✓' : ''}</div>
+      <div class="block-info">
+        <div class="block-title">${item.label}</div>
+        <div class="block-meta">${item.meta}</div>
+      </div>
+      <div class="block-duration ${item.type}">${item.dur}</div>
+    `;
+    block.onclick = () => {
+      checks[item.id] = !checks[item.id];
+      if(checks[item.id] && !unavail) {
+        appData.owned[key] = true;
+        updateStreakBadge();
+      }
+      saveData(appData);
+      renderAgenda();
+    };
+    container.appendChild(block);
+  });
+
+  if(pct === 100) {
+    showNotif('Full day complete! Legend behavior. 🏆', 'var(--gold)');
+  }
+}
+
+function resetAgenda() {
+  const key = dateKey(today());
+  appData.agendaChecks[key] = {};
+  saveData(appData);
+  renderAgenda();
+}
+
+// ===== ROADMAP =====
+function renderRoadmap() {
+  const t = today();
+  const st = START.getTime();
+  const et = END.getTime();
+  const tt = new Date(t.getFullYear(), t.getMonth(), t.getDate()).getTime();
+
+  const totalDays = Math.round((et - st) / 86400000);
+  const elapsed = Math.max(0, Math.min(totalDays, Math.round((tt - st) / 86400000)));
+  const remaining = Math.max(0, totalDays - elapsed);
+  const pct = Math.min(100, Math.round((elapsed / totalDays) * 100));
+
+  document.getElementById('roadmap-bar').style.width = pct + '%';
+  document.getElementById('roadmap-pct').textContent = pct + '% complete';
+  document.getElementById('rm-days-done').textContent = elapsed;
+  document.getElementById('rm-days-left').textContent = remaining;
+
+  let studyLeft = 0;
+  let d = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  while(d <= END) {
+    if(!isUnavailable(d)) studyLeft++;
+    d.setDate(d.getDate()+1);
+  }
+  document.getElementById('rm-study-days').textContent = studyLeft;
+
+  const phases = [
+    { name: 'Foundation Phase', dates: 'Mar 30 - Apr 15', status: tt > new Date(2026,3,15).getTime() ? 'past' : (tt >= st ? 'current' : 'future'), tag: tt > new Date(2026,3,15).getTime() ? 'done' : 'active', tagLabel: tt > new Date(2026,3,15).getTime() ? 'Done' : 'Active' },
+    { name: 'Rest Period 1', dates: 'Apr 16 - 19', status: 'unavail', tag: 'rest', tagLabel: 'Rest' },
+    { name: 'Study Phase 2', dates: 'Apr 20 - 23', status: tt > new Date(2026,3,23).getTime() ? 'past' : (tt >= new Date(2026,3,20).getTime() ? 'current' : 'future'), tag: tt > new Date(2026,3,23).getTime() ? 'done' : 'active', tagLabel: tt > new Date(2026,3,23).getTime() ? 'Done' : 'Active' },
+    { name: 'Rest Period 2', dates: 'Apr 24 - 26', status: 'unavail', tag: 'rest', tagLabel: 'Rest' },
+    { name: 'Study Phase 3', dates: 'Apr 27 only', status: tt > new Date(2026,3,27).getTime() ? 'past' : 'future', tag: tt > new Date(2026,3,27).getTime() ? 'done' : 'active', tagLabel: tt > new Date(2026,3,27).getTime() ? 'Done' : 'Active' },
+    { name: 'Rest Period 3', dates: 'Apr 28 - May 2', status: 'unavail', tag: 'rest', tagLabel: 'Rest' },
+    { name: 'Study Phase 4', dates: 'May 3 - 12', status: tt > new Date(2026,4,12).getTime() ? 'past' : (tt >= new Date(2026,4,3).getTime() ? 'current' : 'future'), tag: tt > new Date(2026,4,12).getTime() ? 'done' : 'active', tagLabel: tt > new Date(2026,4,12).getTime() ? 'Done' : 'Active' },
+    { name: 'Rest Period 4', dates: 'May 13 - 15', status: 'unavail', tag: 'rest', tagLabel: 'Rest' },
+    { name: 'Study Phase 5', dates: 'May 16 - 20', status: tt > new Date(2026,4,20).getTime() ? 'past' : (tt >= new Date(2026,4,16).getTime() ? 'current' : 'future'), tag: tt > new Date(2026,4,20).getTime() ? 'done' : 'active', tagLabel: tt > new Date(2026,4,20).getTime() ? 'Done' : 'Active' },
+    { name: 'Extended Break', dates: 'May 21 - Jun 14', status: 'unavail', tag: 'rest', tagLabel: 'Rest' },
+    { name: '🔥 BEAST MODE', dates: 'Jun 15 - Sep 2', status: tt >= BEAST_START.getTime() ? 'beast' : 'future', tag: tt >= BEAST_START.getTime() ? 'beast' : 'beast', tagLabel: tt >= BEAST_START.getTime() ? 'ACTIVE 🔥' : 'Upcoming' },
+  ];
+
+  const container = document.getElementById('roadmap-phases');
+  container.innerHTML = phases.map(p => `
+    <div class="phase-row">
+      <div class="phase-indicator ${p.status}"></div>
+      <div class="phase-info">
+        <div class="phase-name">${p.name}</div>
+        <div class="phase-dates">${p.dates}</div>
+      </div>
+      <div class="phase-tag ${p.tag}">${p.tagLabel}</div>
+    </div>
+  `).join('');
+}
+
+// ===== SCORES =====
+function saveScore() {
+  const date = document.getElementById('score-date').value;
+  const q = parseInt(document.getElementById('score-q').value);
+  const v = parseInt(document.getElementById('score-v').value);
+  const source = document.getElementById('score-source').value.trim();
+
+  if(!date || isNaN(q) || isNaN(v)) { showNotif('Fill in date, Quant, and Verbal.', 'var(--orange)'); return; }
+  if(q < 130 || q > 170 || v < 130 || v > 170) { showNotif('Scores must be 130-170.', 'var(--orange)'); return; }
+
+  appData.scores.push({ date, q, v, source: source || 'Practice Test' });
+  appData.scores.sort((a,b) => a.date.localeCompare(b.date));
+  saveData(appData);
+  renderScores();
+
+  document.getElementById('score-date').value = '';
+  document.getElementById('score-q').value = '';
+  document.getElementById('score-v').value = '';
+  document.getElementById('score-source').value = '';
+  showNotif(`Score logged: ${q+v} total 📊`, 'var(--accent)');
+}
+
+function renderScores() {
+  const el = document.getElementById('score-history');
+  if(!appData.scores.length) {
+    el.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px">No scores logged yet. Start tracking!</p>';
+    return;
+  }
+  el.innerHTML = appData.scores.slice().reverse().map(s => {
+    const [y,m,d] = s.date.split('-');
+    const ds = `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+    const totalColor = (s.q + s.v) >= 325 ? 'var(--green2)' : (s.q + s.v) >= 310 ? 'var(--gold2)' : 'var(--text3)';
+    return `<div class="score-row">
+      <span class="score-date">${ds}</span>
+      <span style="font-size:12px;color:var(--text3)">${s.source}</span>
+      <span class="score-q">Q: ${s.q}</span>
+      <span class="score-v">V: ${s.v}</span>
+      <span class="score-total" style="color:${totalColor}">${s.q + s.v}</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== QUOTES =====
+const QUOTES = [
+  { text: "The secret of getting ahead is getting started.", author: "MARK TWAIN" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "WALT DISNEY" },
+  { text: "Discipline is choosing between what you want now and what you want most.", author: "UNKNOWN" },
+  { text: "Hard work beats talent when talent doesn't work hard.", author: "TIM NOTKE" },
+  { text: "Success is the sum of small efforts, repeated day in and day out.", author: "ROBERT COLLIER" },
+  { text: "You don\'t have to be great to start, but you have to start to be great.", author: "ZIG ZIGLAR" },
+  { text: "The difference between ordinary and extraordinary is that little extra.", author: "JIMMY JOHNSON" },
+  { text: "If you want to go fast, go alone. If you want to go far, go together.", author: "AFRICAN PROVERB" },
+  { text: "It always seems impossible until it\'s done.", author: "NELSON MANDELA" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "SAM LEVENSON" },
+];
+
+function setDailyQuote() {
+  const idx = new Date().getDate() % QUOTES.length;
+  const q = QUOTES[idx];
+  document.getElementById('quote-text').textContent = q.text;
+  document.getElementById('quote-author').textContent = '-- ' + q.author;
+}
+
+// ===== INIT =====
+function init() {
+  initCalView();
+  renderCalendar();
+  renderLogList();
+  updateStreakBadge();
+  renderScores();
+  setDailyQuote();
+  renderApplications();
+
+  const t = today();
+  const key = dateKey(t);
+  document.getElementById('header-date').textContent = `GRE Command Center · ${t.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'})}`;
+
+  if(appData.owned[key]) {
+    const btn = document.getElementById('mark-today-btn');
+    btn.textContent = 'Today Already Marked ✓';
+    btn.classList.add('already');
+  }
+
+  const todayNote = document.getElementById('today-note');
+  const todayKey = dateKey(today());
+  if(appData.notes[todayKey]) todayNote.value = appData.notes[todayKey];
+  if(appData.moods[todayKey]) {
+    document.querySelectorAll('.mood-btn').forEach(b => {
+      if(b.dataset.mood === appData.moods[todayKey]) b.classList.add('selected');
+    });
+  }
+
+  const scoreDate = document.getElementById('score-date');
+  scoreDate.value = dateKey(t);
+}
+
+// ===== APPLICATIONS DATA =====
+
+const BOOTH_SECTIONS = [
+  {
+    id: 'booth-gre', icon: '📝', title: 'GRE / Test Score',
+    items: [
+      { id: 'b-gre1', label: 'Register for GRE exam', hint: 'Book your test date at ets.org -- at least 6 weeks out', badge: 'early' },
+      { id: 'b-gre2', label: 'Complete GRE exam (target 325+)', hint: 'Booth avg: Q 163 / V 162 · Score valid 5 years', badge: 'key' },
+      { id: 'b-gre3', label: 'Order official GRE score report to Booth', hint: 'Booth school code: 1832 · Send after sitting', badge: 'mid' },
+      { id: 'b-gre4', label: 'Self-report scores in Booth application portal', hint: 'Official scores required only after admission offer', badge: 'late' },
+    ]
+  },
+  {
+    id: 'booth-acad', icon: '🎓', title: 'Academic Records',
+    items: [
+      { id: 'b-acad1', label: 'Request official transcripts from all universities attended', hint: 'Every postsecondary institution -- including study abroad', badge: 'early' },
+      { id: 'b-acad2', label: 'Confirm transcripts are from accredited institutions', hint: 'Booth verifies non-US credentials independently', badge: 'early' },
+      { id: 'b-acad3', label: 'Compute / confirm cumulative GPA', hint: 'Booth avg: 3.6 GPA · Be ready to explain any anomalies', badge: 'mid' },
+    ]
+  },
+  {
+    id: 'booth-essays', icon: '✍️', title: 'Essays',
+    items: [
+      { id: 'b-ess1', label: 'Essay 1: Career goals -- Why MBA, why Booth? (min 250 words)', hint: '"How will the Booth MBA help you achieve your immediate and long-term goals?"', badge: 'key' },
+      { id: 'b-ess2', label: 'Essay 2: Booth photo/value prompt (min 250 words)', hint: 'Select one Booth community photo; connect it to one of your values', badge: 'key' },
+      { id: 'b-ess3', label: 'Optional essay: Any additional context (max 300 words)', hint: 'Gaps, low GPA, job changes -- address it here proactively', badge: 'mid' },
+      { id: 'b-ess4', label: 'Reapplicant essay (if applicable, max 300 words)', hint: 'Required only if you applied to Booth in a prior cycle', badge: 'mid' },
+      { id: 'b-ess5', label: 'Proof-read all essays for tone, grammar, word count', hint: 'Have at least 2 external readers review before submitting', badge: 'late' },
+    ]
+  },
+  {
+    id: 'booth-recs', icon: '📬', title: 'Recommendations',
+    items: [
+      { id: 'b-rec1', label: 'Identify Recommender 1: Current direct supervisor', hint: 'Required -- must be someone in a direct management role over you', badge: 'early' },
+      { id: 'b-rec2', label: 'Identify Recommender 2: Professional colleague or leader', hint: 'Not a coworker peer -- someone senior in a professional context', badge: 'early' },
+      { id: 'b-rec3', label: 'Brief both recommenders on your goals and Booth story', hint: 'Share your resume, essays, and specific examples to help them', badge: 'mid' },
+      { id: 'b-rec4', label: 'Enter recommender info in Booth online portal', hint: 'Booth sends them the form -- no paper letters accepted', badge: 'mid' },
+      { id: 'b-rec5', label: 'Confirm both letters submitted before deadline', hint: 'Reminders: 2 weeks out, 1 week out, 3 days out', badge: 'late' },
+    ]
+  },
+  {
+    id: 'booth-resume', icon: '📄', title: 'Resume & Profile',
+    items: [
+      { id: 'b-res1', label: 'Update resume to MBA-ready format (1 page max)', hint: 'Quantify achievements -- numbers, %, $, team sizes', badge: 'early' },
+      { id: 'b-res2', label: 'Include all work experience, leadership, extracurriculars', hint: 'Booth values consulting, finance, entrepreneurship backgrounds', badge: 'mid' },
+      { id: 'b-res3', label: 'Have resume reviewed by MBA peer or consultant', hint: 'Fresh eyes catch what you miss after staring at it', badge: 'mid' },
+    ]
+  },
+  {
+    id: 'booth-app', icon: '🖥️', title: 'Online Application',
+    items: [
+      { id: 'b-app1', label: 'Create account on Booth application portal', hint: 'Applications open typically June-July each year', badge: 'early' },
+      { id: 'b-app2', label: 'Complete all demographic and background sections', hint: 'Including work history, awards, extracurriculars, and certifications', badge: 'mid' },
+      { id: 'b-app3', label: 'Upload final resume to portal', hint: 'PDF preferred · Double-check formatting renders correctly', badge: 'mid' },
+      { id: 'b-app4', label: 'Pay application fee ($250)', hint: 'Credit card only in portal · No fee waiver for standard applicants', badge: 'late' },
+      { id: 'b-app5', label: 'Submit application before round deadline (11:59 PM CST)', hint: 'R1: Sep 16 · R2: Jan 6 · R3: Apr 2 (2027 cycle)', badge: 'late' },
+    ]
+  },
+  {
+    id: 'booth-interview', icon: '🎤', title: 'Interview Prep',
+    items: [
+      { id: 'b-int1', label: 'Research Booth curriculum, clubs, faculty', hint: 'Know the LEAD program, Polsky Center, Harper Center inside-out', badge: 'mid' },
+      { id: 'b-int2', label: 'Prepare "Why Booth?" narrative (specific, not generic)', hint: 'Name professors, clubs, classmates, case competitions you\'d join', badge: 'mid' },
+      { id: 'b-int3', label: 'Practice blind resume-based interview format', hint: 'Booth interviews are blind -- interviewer only sees your resume', badge: 'mid' },
+      { id: 'b-int4', label: 'Complete interview when invited (on campus or virtual)', hint: 'Conducted by current student, alum, or admissions staff', badge: 'late' },
+    ]
+  },
+  {
+    id: 'booth-research', icon: '🔍', title: 'School Research & Outreach',
+    items: [
+      { id: 'b-rch1', label: 'Attend a Booth info session or virtual event', hint: 'Shows demonstrated interest -- Booth tracks engagement', badge: 'early' },
+      { id: 'b-rch2', label: 'Connect with a current Booth student via "Connect with a Student"', hint: 'Available on Booth admissions site -- invaluable insight', badge: 'early' },
+      { id: 'b-rch3', label: 'Visit Harper Center campus (if possible)', hint: 'Hyde Park, Chicago -- visit reinforces genuine interest', badge: 'mid' },
+      { id: 'b-rch4', label: 'Research post-MBA career placement data at Booth', hint: 'Align your career goals with Booth\'s top placement industries', badge: 'mid' },
+    ]
+  },
+];
+
+const KELLOGG_SECTIONS = [
+  {
+    id: 'kel-gre', icon: '📝', title: 'GRE / Test Score',
+    items: [
+      { id: 'k-gre1', label: 'Register for GRE exam', hint: 'Book at ets.org -- 6+ weeks out for preferred dates', badge: 'early' },
+      { id: 'k-gre2', label: 'Complete GRE exam (target 322+)', hint: 'Kellogg avg: Q 162 / V 160 · GRE and GMAT both accepted', badge: 'key' },
+      { id: 'k-gre3', label: 'Send official GRE scores to Kellogg', hint: 'Kellogg school code: 1565 · Send electronically via ETS', badge: 'mid' },
+    ]
+  },
+  {
+    id: 'kel-acad', icon: '🎓', title: 'Academic Records',
+    items: [
+      { id: 'k-acad1', label: 'Request official transcripts from all universities attended', hint: 'Kellogg requires transcripts from every college/university', badge: 'early' },
+      { id: 'k-acad2', label: 'Prepare explanation if GPA is below 3.5', hint: 'Address it in optional essay -- context matters to Kellogg', badge: 'mid' },
+      { id: 'k-acad3', label: 'Confirm 3-7 years of work experience on application', hint: 'Kellogg Two-Year MBA expects 3-7 years professional exp.', badge: 'early' },
+    ]
+  },
+  {
+    id: 'kel-essays', icon: '✍️', title: 'Essays',
+    items: [
+      { id: 'k-ess1', label: 'Essay 1: Intentionality -- goals + why Kellogg (450 words)', hint: '"What path are you pursuing and why is Kellogg right for you?"', badge: 'key' },
+      { id: 'k-ess2', label: 'Essay 2: Challenge + skills (450 words)', hint: '"A time you needed a combination of skills to solve a problem"', badge: 'key' },
+      { id: 'k-ess3', label: 'Optional essay: Additional context (if needed)', hint: 'Low GPA, employment gaps, or anything unexplained in application', badge: 'mid' },
+      { id: 'k-ess4', label: 'Proof-read all essays -- have 2+ people review', hint: 'Kellogg values clarity of purpose and authentic voice', badge: 'late' },
+    ]
+  },
+  {
+    id: 'kel-video', icon: '🎬', title: 'Video Essays',
+    items: [
+      { id: 'k-vid1', label: 'Access video essay section after submitting application + fee', hint: 'Video essay is unlocked in the portal post-submission', badge: 'late' },
+      { id: 'k-vid2', label: 'Complete Video Essay 1: Brief introduction', hint: 'Approx 1 min · Who you are, background, energy -- be authentic', badge: 'late' },
+      { id: 'k-vid3', label: 'Complete Video Essay 2: Why Kellogg?', hint: 'Approx 1 min · Specifics matter -- clubs, professors, culture', badge: 'late' },
+      { id: 'k-vid4', label: 'Complete Video Essay 3: Behavioral / skills question', hint: 'Prompt revealed when you access the video section', badge: 'late' },
+      { id: 'k-vid5', label: 'Practice video responses for clarity and confidence', hint: 'Record yourself first -- fix pacing, eye contact, background', badge: 'mid' },
+    ]
+  },
+  {
+    id: 'kel-recs', icon: '📬', title: 'Recommendations',
+    items: [
+      { id: 'k-rec1', label: 'Identify Recommender 1: Immediate supervisor / manager', hint: 'Primary rec -- professional leadership context is essential', badge: 'early' },
+      { id: 'k-rec2', label: 'Identify Recommender 2: Senior professional contact', hint: 'Mentor, client, or senior colleague who knows your work deeply', badge: 'early' },
+      { id: 'k-rec3', label: 'Brief recommenders with your story, goals, and Kellogg fit', hint: 'Give them your resume, essays, and talking points', badge: 'mid' },
+      { id: 'k-rec4', label: 'Provide recommender info in Kellogg portal', hint: 'Portal sends email to recommenders with the form', badge: 'mid' },
+      { id: 'k-rec5', label: 'Confirm both recommendation letters submitted on time', hint: 'All letters due by 5:00 PM CT on deadline day', badge: 'late' },
+    ]
+  },
+  {
+    id: 'kel-resume', icon: '📄', title: 'Resume & Profile',
+    items: [
+      { id: 'k-res1', label: 'Update resume: MBA format, 1 page, quantified results', hint: 'Leadership, impact, team sizes -- Kellogg values collaborative leadership', badge: 'early' },
+      { id: 'k-res2', label: 'Highlight team leadership and cross-functional experience', hint: 'Kellogg is famous for its "we over I" culture -- show it in your resume', badge: 'mid' },
+      { id: 'k-res3', label: 'Have resume reviewed by Kellogg alum or consultant', hint: 'Kellogg-specific feedback is valuable for framing your story', badge: 'mid' },
+    ]
+  },
+  {
+    id: 'kel-app', icon: '🖥️', title: 'Online Application',
+    items: [
+      { id: 'k-app1', label: 'Create account on Kellogg application portal', hint: 'Application opens annually around June', badge: 'early' },
+      { id: 'k-app2', label: 'Complete all sections: experience, goals, awards, activities', hint: 'Include extracurriculars and community involvement', badge: 'mid' },
+      { id: 'k-app3', label: 'Upload resume in portal (PDF)', hint: 'Verify all formatting displays correctly after upload', badge: 'mid' },
+      { id: 'k-app4', label: 'Pay $250 application fee via credit card', hint: 'Fee waiver available for active US military and TFA/AmeriCorps/Peace Corps', badge: 'late' },
+      { id: 'k-app5', label: 'Submit by round deadline (5:00 PM CT sharp)', hint: 'R1: Sep 10 · R2: Jan 7 · R3: Apr 1 (2027 cycle) · No exceptions', badge: 'late' },
+    ]
+  },
+  {
+    id: 'kel-interview', icon: '🎤', title: 'Interview Prep',
+    items: [
+      { id: 'k-int1', label: 'Prepare core narratives: TMAY, goals, Why Kellogg, leadership', hint: 'Kellogg asks: walk me thru resume, ST/LT goals, why MBA, why now', badge: 'mid' },
+      { id: 'k-int2', label: 'Research Kellogg culture: collaboration, GIM, clubs, Global Hub', hint: 'Know the Global Hub, GIM trips, TMP leadership program', badge: 'mid' },
+      { id: 'k-int3', label: 'Practice behavioral questions (resilience, teamwork, leadership)', hint: 'STAR format: Situation, Task, Action, Result -- be specific', badge: 'mid' },
+      { id: 'k-int4', label: 'Complete interview invitation when received', hint: 'Kellogg interviews a large % of applicants -- expect alumni-led', badge: 'late' },
+    ]
+  },
+  {
+    id: 'kel-research', icon: '🔍', title: 'School Research & Outreach',
+    items: [
+      { id: 'k-rch1', label: 'Attend a Kellogg info session or campus visit day', hint: 'Preview Days and virtual events run year-round', badge: 'early' },
+      { id: 'k-rch2', label: 'Connect with a current Kellogg student', hint: 'Kellogg student ambassadors are known for being especially welcoming', badge: 'early' },
+      { id: 'k-rch3', label: 'Research TMP, GIM, and specific clubs aligned with your goals', hint: 'Technology Management Program, consulting clubs, marketing groups', badge: 'mid' },
+      { id: 'k-rch4', label: 'Review Kellogg Class of 2025 employment report', hint: 'Match your target industry to Kellogg\'s top placement tracks', badge: 'mid' },
+    ]
+  },
+];
+
+const BADGE_LABELS = { early: 'Start Early', mid: 'Mid-Prep', late: 'Near Deadline', key: 'Critical' };
+
+function switchAppTab(school) {
+  document.getElementById('app-booth').style.display = school === 'booth' ? 'block' : 'none';
+  document.getElementById('app-kellogg').style.display = school === 'kellogg' ? 'block' : 'none';
+  document.getElementById('tab-booth').classList.toggle('active', school === 'booth');
+  document.getElementById('tab-kellogg').classList.toggle('active', school === 'kellogg');
+}
+
+function toggleAppItem(school, itemId) {
+  const key = `app-${school}-${itemId}`;
+  if(!appData[key]) appData[key] = false;
+  appData[key] = !appData[key];
+  saveData(appData);
+  renderApplications();
+}
+
+function renderApplications() {
+  renderSchoolChecklist('booth', BOOTH_SECTIONS);
+  renderSchoolChecklist('kellogg', KELLOGG_SECTIONS);
+}
+
+function renderSchoolChecklist(school, sections) {
+  const container = document.getElementById(`${school}-checklist`);
+  let totalItems = 0, doneItems = 0;
+
+  container.innerHTML = sections.map(section => {
+    const itemsHtml = section.items.map(item => {
+      const key = `app-${school}-${item.id}`;
+      const done = !!appData[key];
+      totalItems++;
+      if(done) doneItems++;
+      const badge = item.badge ? `<span class="app-tip-badge ${item.badge}">${BADGE_LABELS[item.badge]}</span>` : '';
+      return `<div class="app-item ${done ? 'done' : ''}" onclick="toggleAppItem('${school}','${item.id}')">
+        <div class="app-item-check">${done ? '✓' : ''}</div>
+        <div class="app-item-text">
+          <div class="app-item-label">${item.label}</div>
+          <div class="app-item-hint">${item.hint}</div>
+        </div>
+        ${badge}
+      </div>`;
+    }).join('');
+
+    const sectionDone = section.items.filter(i => !!appData[`app-${school}-${i.id}`]).length;
+
+    return `<div class="app-section">
+      <div class="app-section-header">
+        <div class="app-section-title">${section.icon} ${section.title}</div>
+        <div class="app-section-count">${sectionDone}/${section.items.length}</div>
+      </div>
+      ${itemsHtml}
+    </div>`;
+  }).join('');
+
+  const pct = totalItems > 0 ? Math.round((doneItems / totalItems) * 100) : 0;
+  document.getElementById(`${school}-pct`).textContent = `${pct}%`;
+  document.getElementById(`${school}-bar`).style.width = `${pct}%`;
+}
+
+init();
+</script>
+</body>
+</html>
