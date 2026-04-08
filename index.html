@@ -1556,8 +1556,10 @@ function renderLogList() {
 
 // ===== TIMER =====
 let timerInterval = null;
-let timerSeconds = 0;
-let timerTotal = 0;
+let timerTotal = 0;        // total seconds for this session
+let timerSeconds = 0;      // seconds remaining when paused
+let timerEndTime = null;   // absolute timestamp (ms) when timer reaches zero
+let timerPausedAt = null;  // timestamp when we paused
 let timerRunning = false;
 let timerIsBreak = false;
 let timerLabel = '';
@@ -1576,8 +1578,8 @@ function getRandMsg(type) {
 
 function setTimer(mins, label, isBreak) {
   resetTimer();
-  timerSeconds = mins * 60;
-  timerTotal = timerSeconds;
+  timerTotal = mins * 60;
+  timerSeconds = timerTotal;
   timerLabel = label;
   timerIsBreak = isBreak;
 
@@ -1589,65 +1591,88 @@ function setTimer(mins, label, isBreak) {
 
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active-preset'));
 
-  updateTimerDisplay();
+  updateTimerDisplay(timerTotal);
   document.getElementById('timer-msg').textContent = isBreak
     ? 'Ready for a break? You earned it.'
     : 'Ready to lock in? Hit Start when you are.';
 }
 
-function updateTimerDisplay() {
-  const m = Math.floor(timerSeconds / 60);
-  const s = timerSeconds % 60;
-  const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+function updateTimerDisplay(secondsLeft) {
+  const secs = Math.max(0, Math.round(secondsLeft));
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  const str = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   document.getElementById('timer-ring-time').textContent = str;
 
-  const pct = timerTotal > 0 ? (timerTotal - timerSeconds) / timerTotal : 0;
+  const pct = timerTotal > 0 ? (timerTotal - secs) / timerTotal : 0;
   const circumference = 2 * Math.PI * 96;
   const offset = circumference * (1 - pct);
   document.getElementById('timer-ring-fill').style.strokeDashoffset = offset;
 
   const fill = document.getElementById('timer-ring-fill');
-  if(timerSeconds <= 60 && timerSeconds > 0) fill.style.stroke = 'var(--orange)';
-  else if(timerIsBreak) fill.style.stroke = 'var(--green)';
+  if (secs <= 60 && secs > 0) fill.style.stroke = 'var(--orange)';
+  else if (timerIsBreak) fill.style.stroke = 'var(--green)';
   else fill.style.stroke = 'var(--accent)';
 }
 
 function startTimer() {
-  if(timerTotal === 0) { showNotif('Choose a timer mode first.', 'var(--orange)'); return; }
+  if (timerTotal === 0) { showNotif('Choose a timer mode first.', 'var(--orange)'); return; }
   timerRunning = true;
+
+  // If resuming from pause, shift endTime forward by the paused duration
+  if (timerPausedAt !== null) {
+    const pausedDuration = Date.now() - timerPausedAt;
+    timerEndTime += pausedDuration;
+    timerPausedAt = null;
+  } else {
+    // Fresh start: endTime = now + remaining seconds
+    timerEndTime = Date.now() + timerSeconds * 1000;
+  }
+
   document.getElementById('timer-start-btn').style.display = 'none';
   document.getElementById('timer-pause-btn').style.display = 'block';
+  document.getElementById('timer-pause-btn').textContent = 'Pause';
   document.getElementById('timer-msg').textContent = getRandMsg('start');
 
+  // Use 250ms interval -- much more responsive than 1000ms,
+  // but accuracy comes from timestamps not tick counting
   timerInterval = setInterval(() => {
-    timerSeconds--;
-    updateTimerDisplay();
-    if(timerSeconds <= 0) {
+    const remaining = (timerEndTime - Date.now()) / 1000;
+    if (remaining <= 0) {
       clearInterval(timerInterval);
       timerRunning = false;
+      timerSeconds = 0;
+      updateTimerDisplay(0);
       onTimerDone();
+    } else {
+      updateTimerDisplay(remaining);
     }
-  }, 1000);
+  }, 250);
 }
 
 function pauseTimer() {
-  if(timerRunning) {
+  if (timerRunning) {
     clearInterval(timerInterval);
     timerRunning = false;
+    timerPausedAt = Date.now();
+    // Snapshot how many seconds are left so we can resume correctly
+    timerSeconds = Math.max(0, (timerEndTime - Date.now()) / 1000);
     document.getElementById('timer-pause-btn').textContent = 'Resume';
-    document.getElementById('timer-msg').textContent = 'Paused. Come back when you\'re ready.';
+    document.getElementById('timer-msg').textContent = "Paused. Come back when you\'re ready.";
   } else {
     startTimer();
-    document.getElementById('timer-pause-btn').textContent = 'Pause';
   }
 }
 
 function resetTimer() {
   clearInterval(timerInterval);
   timerRunning = false;
-  timerSeconds = 0;
   timerTotal = 0;
+  timerSeconds = 0;
+  timerEndTime = null;
+  timerPausedAt = null;
   document.getElementById('timer-ring-fill').style.strokeDashoffset = 2 * Math.PI * 96;
+  document.getElementById('timer-ring-fill').style.stroke = 'var(--accent)';
   document.getElementById('timer-ring-time').textContent = '--:--';
   document.getElementById('timer-ring-label').textContent = 'ready';
   document.getElementById('timer-mode-label').textContent = 'SELECT A MODE';
