@@ -230,7 +230,9 @@
 
   .cal-day.beast-mode { background: rgba(91,77,224,0.07); border-color: rgba(91,77,224,0.2); color: var(--accent2); }
 
-  .cal-day.past { opacity: 0.45; }
+  .cal-day.past { opacity: 0.5; }
+  .cal-day.past:hover { opacity: 1; background: var(--surface3); border-color: var(--border2); cursor: pointer; }
+  .cal-day.past.owned { opacity: 1; }
 
   .cal-day-num { font-size: 13px; line-height: 1; }
   .cal-day-icon { font-size: 8px; margin-top: 2px; }
@@ -1445,9 +1447,10 @@ function renderCalendar() {
 
     el.innerHTML = `<span class="cal-day-num">${day}</span>${isOwned ? '<span class="cal-day-icon">✓</span>' : ''}`;
 
-    if(!unavail && inProgram && !isPast || isToday) {
+    if(!unavail && inProgram) {
       el.onclick = () => toggleOwned(key, d);
-    } else if(unavail) {
+      if(isPast && !isOwned) el.title = 'Click to backfill this day';
+    } else if(unavail && inProgram) {
       el.title = 'Rest day -- readings & vocab only';
     }
 
@@ -1458,15 +1461,23 @@ function renderCalendar() {
 }
 
 function toggleOwned(key, d) {
+  const t = today();
+  const isToday = key === dateKey(t);
+  const isPastDay = d < new Date(t.getFullYear(), t.getMonth(), t.getDate());
   if(appData.owned[key]) {
     delete appData.owned[key];
     showNotif('Day unmarked.', 'var(--red)');
   } else {
     appData.owned[key] = true;
-    showNotif('Day owned! Keep going! 🔥', 'var(--green)');
+    if(isPastDay && !isToday) {
+      showNotif('Past day recovered! Every one counts.', 'var(--accent)');
+    } else {
+      showNotif('Day owned! Keep going! 🔥', 'var(--green)');
+    }
   }
   saveData(appData);
   renderCalendar();
+  renderLogList();
   updateStreakBadge();
 }
 
